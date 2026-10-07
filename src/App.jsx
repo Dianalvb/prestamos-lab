@@ -1,20 +1,35 @@
 import { useState } from 'react'
+import { equipo } from './data/equipo'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import './App.css'
+// import TarjetaEquipo from './components/TarjetaEquipo'
+import Catalogo from './components/Catalogo'
+import Solicitar from './components/Solicitar' 
 
 function App() {
   const [count, setCount] = useState(0)
+  const [disponibles, setDisponibles] = useState(5) 
+  const [total, setTotal] = useState(5)
+  const [solicitudes, setSolicitudes]=useState([])
 
-function prestar(){
-  setDisponibles((d) => (d > 0 ? d - 1 : d))
-}
+  function prestar() {
+    setDisponibles((d) => (d > 0 ? d - 1 : d))
+  }
 
-function devolver() { 
-  setDisponibles((d) => (d > 0 ? d + 1 : d))
-}
+  function devolver() { 
+    setDisponibles((d) => (d < total ? d + 1 : d))
+  }
 
+  function agregar(equipo){
+    setSolicitudes((lista) => [...lista, equipo])
+    
+  }
+
+  function quitar(id){
+    setSolicitudes((lista) => lista.filter((equipo) => equipo.id !==id))
+  }
   return (
     <>
       <section id="center">
@@ -30,18 +45,15 @@ function devolver() {
           </p>
           <h2>{count}</h2>
         </div>
-
-        <main>
-          <h2>Raspberry Pi</h2>
-          <p>{disponibles} de {total} disponibles</p>
-          <button type="button" onClick={prestar} disabled={disponibles===0}>prestar</button>
-          <button type="button" onClick={devolver} disabled={disponibles===total}>devolver</button>
-        </main>
-        
       </section>
 
-      <div className="ticks"></div>
+      <Solicitar solicitudes={solicitudes} quitar={quitar}/>
 
+      <div style={{ padding: '20px' }}>
+        <Catalogo equipo={equipo} agregar={agregar}/>
+      </div>
+
+      <div className="ticks"></div>
       <div className="ticks"></div>
       <section id="spacer"></section>
     </>
